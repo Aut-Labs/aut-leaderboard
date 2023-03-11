@@ -64,7 +64,7 @@ export const FooterData = {
 };
 
 /* ------------------------------------ */
-// TRY-AUT data section
+// aut-leaderboard data section
 /* ------------------------------------ */
 import expand from "common/assets/image/expand.svg";
 import invite from "common/assets/image/invite.svg";

@@ -1,16 +1,13 @@
 version: '3.9'
 services:
-  try_aut_web: 
-    container_name: try_aut_web
-    image: try_aut_web
+  aut_leaderboard_web: 
+    container_name: aut_leaderboard_web
+    image: aut_leaderboard_web
     build: ./
 
-  try_aut_nginx:
-    container_name: try_aut_nginx
-    image: try_aut_nginx
+  aut_leaderboard_nginx:
+    container_name: aut_leaderboard_nginx
+    image: aut_leaderboard_nginx
     build: ./nginx
     ports:
-      - 3001:9080
-
-networks:
-  try_aut:
+      - 4001:9080

@@ -4,7 +4,10 @@ import Container from "common/components/Container";
 import { NavbarData } from "common/data";
 import PropTypes from "prop-types";
 import Logo from "common/components/UIElements/Logo";
-import Link from "next/link";
+import Button from "common/components/Button";
+import { openModal } from "@redq/reuse-modal";
+import Web3NetworkProvider from "common/ProviderFactory/components/Web3NetworkProvider";
+import { useState } from "react";
 
 const navbarStyle = {
   className: "sass_app_dark_navbar",
@@ -35,8 +38,46 @@ const logoStyles = {
   },
 };
 
-const Navbar = ({ row }) => {
+const Navbar = ({ row, networks, onConnected }) => {
   const { logo } = NavbarData;
+  const [isAuthorised, setIsAuthorised] = useState(false);
+
+  const openPopup = () => {
+    openModal({
+      config: {
+        className: "customModal",
+        style: {
+          transform: "scale(1)",
+          border: 0,
+          background: "red",
+        },
+        animationFrom: { transform: "scale(0.3)" }, // react-spring <Spring from={}> props value
+        animationTo: { transform: "scale(1)" }, //  react-spring <Spring to={}> props value
+        transition: {
+          mass: 1,
+          tension: 130,
+          friction: 26,
+        },
+        disableDragging: true,
+        width: 450,
+        height: 450,
+      },
+      overlayClassName: "customeOverlayClass",
+      closeOnClickOutside: false,
+      component: Web3NetworkProvider,
+      componentProps: {
+        networks,
+        onClose: async ({ connected, account }, errorMessage) => {
+          setIsAuthorised(connected);
+          onConnected(connected, account);
+        },
+      },
+    });
+  };
+
+  const onDisconnect = () => {
+    setIsAuthorised(false);
+  }
 
   return (
     <NavbarWrapper {...navbarStyle}>
@@ -59,14 +100,39 @@ const Navbar = ({ row }) => {
             sm: "space-between",
           }}
         >
-          <Link href="/" shallow>
-            <Logo
-              logoSrc={logo}
-              alt="Aut Logo"
-              logoStyle={logoStyles}
-              className="sticky-logo nav-logo"
+          <Logo
+            logoSrc={logo}
+            href="/"
+            alt="Aut Logo"
+            logoStyle={logoStyles}
+            className="sticky-logo nav-logo"
+          />
+          {!!isAuthorised && (
+            <Button
+              colors="primary"
+              variant="roundOutlined"
+              title="Disconnect"
+              target="_blank"
+              size="normal"
+              onClick={onDisconnect}
+              minWidth={{
+                _: "220px",
+              }}
             />
-          </Link>
+          )}
+          {!isAuthorised && (
+            <Button
+              colors="primary"
+              variant="roundOutlined"
+              title="Connect"
+              target="_blank"
+              size="normal"
+              onClick={openPopup}
+              minWidth={{
+                _: "220px",
+              }}
+            />
+          )}
         </Box>
       </Container>
     </NavbarWrapper>
