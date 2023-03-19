@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useConfig, useConnector, useEthers } from "@usedapp/core";
-import { authoriseWithWeb3, isAllowListed } from "api/auth.api";
+import { authoriseWithWeb3 } from "api/auth.api";
 
 const useDeferredPromise = () => {
   const deferRef = useRef(null);
@@ -22,7 +22,7 @@ const useDeferredPromise = () => {
   return { defer, deferRef: deferRef.current };
 }
 
-export const useAutWalletConnect = ({ shouldBeAllowListed = false }) => {
+export const useAutWalletConnect = () => {
   const { defer, deferRef } = useDeferredPromise();
   const [isSigning, setIsSigning] = useState(false);
   const [connectError, setErrorMessage] = useState("");
@@ -48,22 +48,12 @@ export const useAutWalletConnect = ({ shouldBeAllowListed = false }) => {
       const provider = conn.provider;
       const signer = provider.getSigner();
 
-      if (shouldBeAllowListed) {
-        const isAllowed = await isAllowListed(signer);
-        const isAuthorised = isAllowed && (await authoriseWithWeb3(signer));
-        deferredPromise.resolve({
-          provider,
-          connected: isAuthorised,
-          account,
-        });
-      } else {
-        const isAuthorised = await authoriseWithWeb3(signer);
-        deferredPromise.resolve({
-          provider,
-          connected: isAuthorised,
-          account,
-        });
-      }
+      const isAuthorised = await authoriseWithWeb3(signer);
+      deferredPromise.resolve({
+        provider,
+        connected: isAuthorised,
+        account,
+      });
     } catch (error) {
       if (error?.code === "ACTION_REJECTED") {
         setErrorMessage("User denied message signature");
