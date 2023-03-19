@@ -27,14 +27,13 @@ function replaceAll(str, find, replace) {
   return str.replace(new RegExp(escapeRegExp(find), "g"), replace);
 }
 
-export function ipfsCIDToHttpUrl(url, isJson = false) {
+export function ipfsCIDToHttpUrl(url) {
   if (!url) {
     return url;
   }
-  if (!url.includes("https://"))
-    return isJson
-      ? `https://ipfs.io/ipfs/${replaceAll(url, "ipfs://", "")}/metadata.json`
-      : `https://ipfs.io/ipfs/${replaceAll(url, "ipfs://", "")}`;
+  if (!url.includes("https://")) {
+    return `${process.env.NEXT_PUBLIC_IPFS_URL}/${replaceAll(url, "ipfs://", "")}`;
+  }
   return url;
 }
 
@@ -146,9 +145,9 @@ const NovaLeaderBoard = ({}) => {
                         <Image alt="black-hole" src={BlackHoleImage.src} />
                       </BubbleImageWrapper>
                       <div className="content">
-                        <img
+                        <Image
                           className="image"
-                          loading="lazy"
+                          alt="Leader image"
                           src={ipfsCIDToHttpUrl(leader?.image)}
                         />
                       </div>
@@ -182,9 +181,9 @@ const NovaLeaderBoard = ({}) => {
                           </Typography>
                         </div>
                         <div className="containerImage">
-                          <img
+                          <Image
                             className="image"
-                            loading="lazy"
+                            alt="Leader image 2"
                             src={ipfsCIDToHttpUrl(leader?.image)}
                           />
                         </div>

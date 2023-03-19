@@ -33,7 +33,10 @@ export const LeaderWrapper = styled("div")`
     object-fit: cover;
     width: 58px;
     background-color: black;
-    border-radius: 50%;
+    img {
+      object-fit: cover;
+      border-radius: 50%;
+    }
   }
 
   .topThree {
