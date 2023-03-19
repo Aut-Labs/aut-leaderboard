@@ -1,0 +1,13 @@
+version: '3.9'
+services:
+  aut_leaderboard_prod: 
+    container_name: aut_leaderboard_prod
+    image: aut_leaderboard_prod
+    build: ./
+
+  aut_leaderboard_nginx_prod:
+    container_name: aut_leaderboard_nginx_prod
+    image: aut_leaderboard_nginx_prod
+    build: ./nginx/prod
+    ports:
+      - 4001:9080

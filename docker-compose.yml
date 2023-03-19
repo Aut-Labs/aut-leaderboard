@@ -1,13 +1,13 @@
 version: '3.9'
 services:
-  aut_leaderboard_web: 
-    container_name: aut_leaderboard_web
-    image: aut_leaderboard_web
+  aut_leaderboard_dev: 
+    container_name: aut_leaderboard_dev
+    image: aut_leaderboard_dev
     build: ./
 
-  aut_leaderboard_nginx:
-    container_name: aut_leaderboard_nginx
-    image: aut_leaderboard_nginx
-    build: ./nginx
+  aut_leaderboard_nginx_dev:
+    container_name: aut_leaderboard_nginx_dev
+    image: aut_leaderboard_nginx_dev
+    build: ./nginx/dev
     ports:
       - 4001:9080
