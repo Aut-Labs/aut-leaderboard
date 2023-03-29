@@ -120,7 +120,7 @@ const Main = () => {
             <BottomLeftBubble src={BubbleBottomLeft.src} />
             <TopRightBubble src={BubbleTopRight.src} />
             <Modal>
-              <NovaLeaderBoard connectState={connectState} />
+              <NovaLeaderBoard />
               <Footer />
             </Modal>
           </PerfectScrollbar>

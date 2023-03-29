@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from "common/components/Container";
 import Typography from "common/components/Typography";
 import Section from "common/components/Section";
@@ -18,6 +18,9 @@ import {
 import Button from "common/components/Button";
 import { memo } from "react";
 import { NovaLeaderboardData, TryOutData } from "common/data";
+import { fetchMetadata } from "@aut-labs-private/sdk";
+import axios from "axios";
+import AutLoading from "common/components/AutLoading";
 
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
@@ -32,13 +35,52 @@ export function ipfsCIDToHttpUrl(url) {
     return url;
   }
   if (!url.includes("https://")) {
-    return `${process.env.NEXT_PUBLIC_IPFS_URL}/${replaceAll(url, "ipfs://", "")}`;
+    return `${process.env.NEXT_PUBLIC_IPFS_URL}/${replaceAll(
+      url,
+      "ipfs://",
+      ""
+    )}`;
   }
   return url;
 }
 
-const NovaLeaderBoard = ({}) => {
-  const { title, subtitle, items } = NovaLeaderboardData;
+const NovaLeaderBoard = () => {
+  const { title, subtitle } = NovaLeaderboardData;
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/autID/user/leaderDaos`
+        );
+
+        const daos = response.data;
+
+        const daoData = [];
+
+        for (let i = 0; i < daos.length; i++) {
+          const dao = daos[i];
+          const metadata = await fetchMetadata(
+            dao.daoMetadataUri,
+            process.env.NEXT_PUBLIC_IPFS_URL
+          );
+
+          daoData.push({
+            ...metadata,
+            ...dao,
+          });
+        }
+        setItems(daoData);
+        setLoading(false);
+        console.log(daoData);
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <Section
@@ -119,92 +161,112 @@ const NovaLeaderBoard = ({}) => {
             </div>
           ))}
         </Grid> */}
+
         <LeaderWrapper>
-          <div className="topThree">
-            {items.map((leader, index) => (
-              <div className="leader" key={`leader-${index}`}>
-                {index === 0 ? (
-                  <>
-                    <div className="leaderRank">
-                      <Typography
-                        color="white"
-                        fontWeight="bold"
-                        fontSize={{
-                          xs: "24px",
-                          lg: "35px",
-                        }}
-                      >
-                        {`${index + 1}`}
-                      </Typography>
-                    </div>
-                    <BlackHoleWrapper
-                      key={`item-${index}`}
-                      className={`item-${index + 1}`}
-                    >
-                      <BubbleImageWrapper className="image-wrapper">
-                        <Image alt="black-hole" src={BlackHoleImage.src} />
-                      </BubbleImageWrapper>
-                      <div className="content">
-                        <Image
-                          className="image"
-                          alt="Leader image"
-                          src={ipfsCIDToHttpUrl(leader?.image)}
-                        />
+          {loading && <AutLoading width="130px" height="130px" />}
+          {!loading && !items?.length && (
+            <Typography
+              textAlign="center"
+              mt="0"
+              px={{
+                _: "12px",
+                sm: "0",
+              }}
+              mb={{
+                _: "60px",
+              }}
+              as="subtitle1"
+            >
+              No {`DAO's`} yet!
+            </Typography>
+          )}
+          {!!items.length && (
+            <div className="topThree">
+              {items.map((leader, index) => (
+                <div className="leader" key={`leader-${index}`}>
+                  {index === 0 ? (
+                    <>
+                      <div className="leaderRank">
+                        <Typography
+                          color="white"
+                          fontWeight="bold"
+                          fontSize={{
+                            xs: "24px",
+                            lg: "35px",
+                          }}
+                        >
+                          {`${index + 1}`}
+                        </Typography>
                       </div>
-                    </BlackHoleWrapper>
-                    <div className="leaderInfo">
-                      <Typography
-                        as="subtitle2"
-                        color="white"
-                        margin="0"
-                        textAlign="center"
+                      <BlackHoleWrapper
+                        key={`item-${index}`}
+                        className={`item-${index + 1}`}
                       >
-                        {leader?.name}
-                      </Typography>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {index + 1 <= 3 && (
-                      <>
-                        <div className="leaderRank">
-                          <Typography
-                            as="h2"
-                            fontWeight="bold"
-                            fontSize={{
-                              xs: "24px",
-                              lg: "35px",
-                            }}
-                            color="white"
-                          >
-                            {`${index + 1}`}
-                          </Typography>
-                        </div>
-                        <div className="containerImage">
+                        <BubbleImageWrapper className="image-wrapper">
+                          <Image alt="black-hole" src={BlackHoleImage.src} />
+                        </BubbleImageWrapper>
+                        <div className="content">
                           <Image
                             className="image"
-                            alt="Leader image 2"
+                            alt="Leader image"
                             src={ipfsCIDToHttpUrl(leader?.image)}
                           />
                         </div>
+                      </BlackHoleWrapper>
+                      <div className="leaderInfo">
+                        <Typography
+                          as="subtitle2"
+                          color="white"
+                          margin="0"
+                          textAlign="center"
+                        >
+                          {leader?.name}
+                        </Typography>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {index + 1 <= 3 && (
+                        <>
+                          <div className="leaderRank">
+                            <Typography
+                              as="h2"
+                              fontWeight="bold"
+                              fontSize={{
+                                xs: "24px",
+                                lg: "35px",
+                              }}
+                              color="white"
+                            >
+                              {`${index + 1}`}
+                            </Typography>
+                          </div>
+                          <div className="containerImage">
+                            <Image
+                              className="image"
+                              alt="Leader image 2"
+                              src={ipfsCIDToHttpUrl(leader?.image)}
+                            />
+                          </div>
 
-                        <div className="leaderInfo">
-                          <Typography
-                            as="subtitle2"
-                            color="white"
-                            margin="0"
-                            textAlign="center"
-                          >
-                            {leader.name}
-                          </Typography>
-                        </div>
-                      </>
-                    )}
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
+                          <div className="leaderInfo">
+                            <Typography
+                              as="subtitle2"
+                              color="white"
+                              margin="0"
+                              textAlign="center"
+                            >
+                              {leader.name}
+                            </Typography>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </LeaderWrapper>
         <TableWrapper>
           <AutTable aria-label="table" cellSpacing="0">
@@ -247,7 +309,7 @@ const NovaLeaderBoard = ({}) => {
               </th>
             </thead>
             <tbody>
-              {items.map(({ image, name, properties }, index) => (
+              {items.map(({ image, name, totalMembers }, index) => (
                 <tr key={`row-key-${index}`}>
                   <td>
                     <CellWrapper style={{ paddingRight: "30%" }}>
@@ -286,7 +348,7 @@ const NovaLeaderBoard = ({}) => {
                         color="white"
                         sx={{ pb: "5px", pl: "30px" }}
                       >
-                        {properties?.members}
+                        {totalMembers}
                       </Typography>
                     </CellWrapper>
                   </td>
