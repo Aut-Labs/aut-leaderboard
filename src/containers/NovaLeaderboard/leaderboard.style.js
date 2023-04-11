@@ -167,6 +167,7 @@ export const LeaderWrapper = styled("div")`
 
   .leaderRank {
     position: absolute;
+    z-index: 1;
     left: 50%;
     top: -60px;
     transform: translateX(-50%);

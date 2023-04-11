@@ -13,8 +13,8 @@ import { ethers } from "ethers";
 import AutLoading from "common/components/AutLoading";
 import { Modal } from "@redq/reuse-modal";
 import styled from "styled-components";
-import BubbleBottomLeft from "common/assets/image/bubble_bottom_left.png";
-import BubbleTopRight from "common/assets/image/bubble_top_right.png";
+import BubbleBottomLeft from "common/assets/image/bubble2.svg";
+import BubbleTopRight from "common/assets/image/bubble.svg";
 import Footer from "containers/Footer";
 import Image from "common/components/Image";
 
@@ -69,6 +69,8 @@ const BottomLeftBubble = styled(Image)({
   height: "700px",
   left: "-350px",
   bottom: "-350px",
+  filter: "blur(50px)",
+  transform: "rotate(-50deg)",
 });
 
 const TopRightBubble = styled(Image)({
@@ -77,6 +79,7 @@ const TopRightBubble = styled(Image)({
   height: "700px",
   top: "calc(-350px + 84px)",
   right: "-350px",
+  filter: "blur(50px)",
 });
 
 const Main = () => {
