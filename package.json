@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@aut-labs-private/abi-types": "^0.0.36",
-    "@aut-labs-private/sdk": "^0.0.58",
+    "@aut-labs-private/sdk": "^0.0.60",
     "@lottiefiles/lottie-player": "^1.5.7",
     "@lottiefiles/react-lottie-player": "^3.4.7",
     "@redq/reuse-modal": "^2.0.0",
