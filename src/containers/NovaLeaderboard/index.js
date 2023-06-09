@@ -71,7 +71,6 @@ const NovaLeaderBoard = () => {
         }
         setItems(daoData);
         setLoading(false);
-        console.log(daoData);
       } catch (error) {
         setItems([]);
         setLoading(false);
