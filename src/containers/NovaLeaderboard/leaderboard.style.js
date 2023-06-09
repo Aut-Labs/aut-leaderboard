@@ -246,7 +246,7 @@ export const TableWrapper = styled("div")`
   }
 `;
 
-export const AutTable = styled("div")`
+export const AutTable = styled("table")`
   padding-top: 120px;
   tbody,
   thead {

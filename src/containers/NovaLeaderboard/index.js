@@ -10,14 +10,11 @@ import {
   BlackHoleWrapper,
   BubbleImageWrapper,
   CellWrapper,
-  Containerr,
-  Grid,
   LeaderWrapper,
   TableWrapper,
 } from "./leaderboard.style";
-import Button from "common/components/Button";
 import { memo } from "react";
-import { NovaLeaderboardData, TryOutData } from "common/data";
+import { NovaLeaderboardData } from "common/data";
 import { fetchMetadata } from "@aut-labs-private/sdk";
 import axios from "axios";
 import AutLoading from "common/components/AutLoading";
@@ -76,6 +73,7 @@ const NovaLeaderBoard = () => {
         setLoading(false);
         console.log(daoData);
       } catch (error) {
+        setItems([]);
         setLoading(false);
       }
     };
@@ -271,42 +269,44 @@ const NovaLeaderBoard = () => {
         <TableWrapper>
           <AutTable aria-label="table" cellSpacing="0">
             <thead>
-              <th>
-                <CellWrapper style={{ paddingRight: "30%" }}>
-                  <Typography
-                    as="subtitle2"
-                    fontWeight="normal"
-                    color="white"
-                    textAlign="left"
-                  >
-                    Rank
-                  </Typography>
-                </CellWrapper>
-              </th>
-              <th>
-                <CellWrapper>
-                  <Typography
-                    as="subtitle2"
-                    fontWeight="normal"
-                    color="white"
-                    textAlign="left"
-                  >
-                    Nova
-                  </Typography>
-                </CellWrapper>
-              </th>
-              <th>
-                <CellWrapper style={{ paddingLeft: "30%" }}>
-                  <Typography
-                    as="subtitle2"
-                    fontWeight="normal"
-                    color="white"
-                    textAlign="left"
-                  >
-                    Members
-                  </Typography>
-                </CellWrapper>
-              </th>
+              <tr>
+                <th>
+                  <CellWrapper style={{ paddingRight: "30%" }}>
+                    <Typography
+                      as="subtitle2"
+                      fontWeight="normal"
+                      color="white"
+                      textAlign="left"
+                    >
+                      Rank
+                    </Typography>
+                  </CellWrapper>
+                </th>
+                <th>
+                  <CellWrapper>
+                    <Typography
+                      as="subtitle2"
+                      fontWeight="normal"
+                      color="white"
+                      textAlign="left"
+                    >
+                      Nova
+                    </Typography>
+                  </CellWrapper>
+                </th>
+                <th>
+                  <CellWrapper style={{ paddingLeft: "30%" }}>
+                    <Typography
+                      as="subtitle2"
+                      fontWeight="normal"
+                      color="white"
+                      textAlign="left"
+                    >
+                      Members
+                    </Typography>
+                  </CellWrapper>
+                </th>
+              </tr>
             </thead>
             <tbody>
               {items.map(({ image, name, totalMembers }, index) => (
@@ -326,7 +326,10 @@ const NovaLeaderBoard = () => {
                   </td>
                   <td>
                     <CellWrapper style={{ justifyContent: "flex-start" }}>
-                      <AvatarWrapper src={ipfsCIDToHttpUrl(image)} />
+                      <AvatarWrapper
+                        alt="avatar"
+                        src={ipfsCIDToHttpUrl(image)}
+                      />
                       <Typography
                         as="subtitle2"
                         fontWeight="normal"
