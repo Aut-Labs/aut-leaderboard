@@ -15,7 +15,7 @@ import {
 } from "./leaderboard.style";
 import { memo } from "react";
 import { NovaLeaderboardData } from "common/data";
-import { fetchMetadata } from "@aut-labs-private/sdk";
+import { fetchMetadata } from "@aut-labs/sdk";
 import axios from "axios";
 import AutLoading from "common/components/AutLoading";
 
